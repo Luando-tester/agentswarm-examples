@@ -1,0 +1,11 @@
+{
+  "defect": "Omits result.capabilities",
+  "witness": "Initialize result.capabilities must be an object",
+  "changes": [
+    {
+      "file": "server/index.js",
+      "old": "        capabilities: { tools: {} },\n",
+      "new": ""
+    }
+  ]
+}

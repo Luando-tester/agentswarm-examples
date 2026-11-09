@@ -1,0 +1,11 @@
+{
+  "defect": "Loses existing closed-task filtering",
+  "witness": "Return the actual page items",
+  "changes": [
+    {
+      "file": "node/src/cli.js",
+      "old": "const shown = flags.all ? items : items.filter((p) => p.status === 'open' || p.status === 'accepted');",
+      "new": "const shown = items;"
+    }
+  ]
+}

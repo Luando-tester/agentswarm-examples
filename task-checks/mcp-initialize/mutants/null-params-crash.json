@@ -1,0 +1,11 @@
+{
+  "defect": "Crashes on params:null",
+  "witness": "not ok \\d+ - initialize rejects malformed params null",
+  "changes": [
+    {
+      "file": "server/index.js",
+      "old": "    if (method === 'initialize') {",
+      "new": "    if (method === 'initialize') {\n      if (params === null) throw new Error('mutant null params crash');"
+    }
+  ]
+}

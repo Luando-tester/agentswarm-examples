@@ -1,0 +1,11 @@
+{
+  "defect": "Omits task parent query",
+  "witness": "Exactly one page per invocation",
+  "changes": [
+    {
+      "file": "node/src/cli.js",
+      "old": "task: flags.task,",
+      "new": "task: undefined,"
+    }
+  ]
+}

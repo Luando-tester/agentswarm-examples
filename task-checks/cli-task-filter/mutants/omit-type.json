@@ -1,0 +1,11 @@
+{
+  "defect": "Omits type query",
+  "witness": "Exactly one page per invocation",
+  "changes": [
+    {
+      "file": "node/src/cli.js",
+      "old": "type: 'task',",
+      "new": "type: undefined,"
+    }
+  ]
+}

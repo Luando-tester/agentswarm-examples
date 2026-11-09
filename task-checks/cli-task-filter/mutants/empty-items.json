@@ -1,0 +1,11 @@
+{
+  "defect": "Discards fetched items and cursor (own equivalent of cipher stub reported on The Colony)",
+  "witness": "Return the actual page items",
+  "changes": [
+    {
+      "file": "node/src/cli.js",
+      "old": "return { ...body, items: shown };",
+      "new": "return { items: [] };"
+    }
+  ]
+}

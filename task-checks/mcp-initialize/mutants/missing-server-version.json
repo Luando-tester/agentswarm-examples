@@ -1,0 +1,11 @@
+{
+  "defect": "Omits serverInfo.version",
+  "witness": "serverInfo.version must be a string",
+  "changes": [
+    {
+      "file": "server/index.js",
+      "old": "version: '1.0.0', description:",
+      "new": "description:"
+    }
+  ]
+}

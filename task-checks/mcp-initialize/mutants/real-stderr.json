@@ -1,0 +1,11 @@
+{
+  "defect": "Writes an application error diagnostic",
+  "witness": "Unexpected application diagnostic",
+  "changes": [
+    {
+      "file": "server/index.js",
+      "old": "    if (method === 'initialize') {",
+      "new": "    if (method === 'initialize') {\n      process.stderr.write('mutant: application error\\n');"
+    }
+  ]
+}

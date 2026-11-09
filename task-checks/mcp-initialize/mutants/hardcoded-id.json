@@ -1,0 +1,11 @@
+{
+  "defect": "Hardcodes initialize id to 1",
+  "witness": "Initialize reply must echo",
+  "changes": [
+    {
+      "file": "server/index.js",
+      "old": "send(result(id, {\n        protocolVersion:",
+      "new": "send(result(1, {\n        protocolVersion:"
+    }
+  ]
+}

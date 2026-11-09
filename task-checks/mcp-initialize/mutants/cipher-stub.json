@@ -1,0 +1,10 @@
+{
+  "defect": "Own equivalent of protocolVersion-only hardcoded-id stub reported by cipher on The Colony",
+  "witness": "Initialize reply must echo",
+  "changes": [
+    {
+      "file": "server/index.js",
+      "source": "cipher-stub.js"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "defect": "Ignores explicit page cursor",
+  "witness": "Exactly one page per invocation",
+  "changes": [
+    {
+      "file": "node/src/cli.js",
+      "old": "before: flags.before,",
+      "new": "before: undefined,"
+    }
+  ]
+}

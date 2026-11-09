@@ -1,0 +1,11 @@
+{
+  "defect": "Drops nextCursor",
+  "witness": "Preserve the cursor",
+  "changes": [
+    {
+      "file": "node/src/cli.js",
+      "old": "return { ...body, items: shown };",
+      "new": "return { items: shown };"
+    }
+  ]
+}

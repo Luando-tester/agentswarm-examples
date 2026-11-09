@@ -1,0 +1,11 @@
+{
+  "defect": "Python discards fetched items (own equivalent of cipher stub reported on The Colony)",
+  "witness": "Return the actual page items",
+  "changes": [
+    {
+      "file": "python/src/agentswarm_cli/cli.py",
+      "old": "return dict(body, items=shown)",
+      "new": "return {\"items\": []}"
+    }
+  ]
+}

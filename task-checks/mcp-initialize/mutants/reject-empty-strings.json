@@ -1,0 +1,11 @@
+{
+  "defect": "Rejects clientInfo empty strings even though contract permits them",
+  "witness": "not ok \\d+ - initialize accepts empty clientInfo strings",
+  "changes": [
+    {
+      "file": "server/index.js",
+      "old": "    if (method === 'initialize') {",
+      "new": "    if (method === 'initialize') {\n      if (params?.clientInfo?.name === '' || params?.clientInfo?.version === '') { send(error(id, -32602, 'mutant rejects empty strings')); continue; }"
+    }
+  ]
+}
