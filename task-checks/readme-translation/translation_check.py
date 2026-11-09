@@ -124,6 +124,63 @@ def language_prose(text, source):
                   prose(text, source))
 
 
+
+# Language ID is deliberately lightweight; review still checks translated meaning.
+LATIN_WORDS = {
+    'es': set('el la los las un una y o de del en por para con sin que es son su sus no antes puede pueden debe consulte nunca todavía ambas ambos'.split()),
+    'fr': set('le la les un une et ou de des du dans pour avec sans qui que est sont votre vos ne pas avant peut peuvent doit voir jamais encore'.split()),
+    'de': set('der die das den dem des ein eine einen einem eines und oder von im in für mit ohne ist sind ihr ihre ihren ihres nicht vor kann können muss siehe niemals noch beide namens'.split()),
+    'pt-BR': set('o a os as um uma e ou de do da em para com sem que é são seu sua não antes pode podem deve veja nunca ainda'.split()),
+    'vi': set('và các những một của trong cho với không là được bạn trước khi có thể phải xem chưa bao giờ'.split()),
+    'id': set('dan atau yang ini itu sebuah dalam untuk dengan tanpa adalah anda sebelum dapat bisa harus lihat jangan belum tidak'.split()),
+    'tr': set('ve veya bir bu için ile olmadan olan sizin önce sonra olabilir gerekir bakın asla henüz değil olarak'.split()),
+    'it': set('il lo la gli le un una e o di del della in per con senza che è sono tuo tua non prima può possono deve vedere mai ancora entrambi entrambe'.split()),
+    'pl': set('i lub ten ta to te w z do dla bez jest są twoje przed może mogą należy zobacz nigdy jeszcze nie'.split()),
+}
+DIACRITICS = {'es': 'áéíóúñ¿¡', 'fr': 'àâçéèêëîïôùûüÿœ', 'de': 'äöüß',
+              'pt-BR': 'áâãàçéêíóôõú', 'vi': 'ăâđêôơưạảấầẩẫậắằẳẵặẹẻẽếềểễệịỉọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ',
+              'tr': 'çğıöşü', 'it': 'àèéìòù', 'pl': 'ąćęłńóśźż'}
+ENGLISH_WORDS = set('the and or a an of in for with without is are your you not before can may must see never yet this that i do to help work people both install command named no'.split())
+
+
+def check_added_language(text, language, context, source):
+    visible = prose(text) if source is None else language_prose(text, source)
+    letters = [char for char in visible if char.isalpha()]
+    if language in ('ru', 'hi'):
+        script = 'CYRILLIC' if language == 'ru' else 'DEVANAGARI'
+        localized = [char for char in letters if script in unicodedata.name(char, '')]
+        assert letters and len(localized) > len(letters) / 2, f'{context}: target script must be a majority of prose letters'
+        assert len(set(localized)) >= min(6, len(localized)), f'{context}: repeated character garbage'
+        assert not re.search(r'(.{2,80})\1{3,}', ''.join(localized)), f'{context}: repeated phrase padding'
+        return localized
+    assert language in LATIN_WORDS, f'Unsupported language: {language}'
+    words = re.findall(r"[^\W\d_]+", visible.casefold())
+    assert words, f'{context}: missing translated prose'
+    counts = {key: sum(word in vocabulary for word in words) for key, vocabulary in LATIN_WORDS.items()}
+    score = counts[language]
+    if context == 'Document' or len(words) > 7 or score:
+        assert score >= max(1, len(words) * .08), f'{context}: insufficient target language stopwords'
+        assert any(word in LATIN_WORDS[language] - ENGLISH_WORDS for word in words), f'{context}: missing discriminative target language words'
+    # Short imperatives can lack function words. Use the document's language ID,
+    # while still rejecting copied English vocabulary in each source block.
+    if source is not None:
+        source_words = set(re.findall(r"[^\W\d_]+", language_prose(source, source).casefold()))
+        copied = sum(word in source_words for word in words)
+        assert copied < max(2, len(words) * .5), f'{context}: untranslated English vocabulary'
+    # Short natural paragraphs often contain only shared words (un, la, in).
+    # Resolve language identity using the complete document's larger sample.
+    if context == 'Document':
+        assert score >= len(words) * .12, f'{context}: insufficient target language stopwords'
+        assert score > max(value for key, value in counts.items() if key != language), f'{context}: wrong or ambiguous language'
+    assert sum(word in ENGLISH_WORDS for word in words) <= len(words) * .35, f'{context}: untranslated English stopwords'
+    if context == 'Document' and language in DIACRITICS:
+        assert any(char in DIACRITICS[language] for char in visible.casefold()), f'{context}: expected target language diacritics'
+    localized = [char for char in letters if 'LATIN' in unicodedata.name(char, '')]
+    assert len(localized) > len(letters) / 2, f'{context}: target script must be a majority of prose letters'
+    assert not re.search(r'(.{2,80})\1{3,}', ''.join(localized)), f'{context}: repeated phrase padding'
+    return localized
+
+
 def check_language_plausibility(localized, language, context):
     # Lightweight grammatical-script checks reject random Unicode sampling.
     # These are broad function characters, never task/caveat keyword matches.
@@ -152,6 +209,8 @@ def target_letter(char, language):
 
 
 def check_language(text, language, context, source=None):
+    if language not in ('ko', 'ja', 'zh-CN'):
+        return check_added_language(text, language, context, source)
     visible = prose(text) if source is None else language_prose(text, source)
     letters = [char for char in visible if char.isalpha()]
     localized = [char for char in letters if target_letter(char, language)]

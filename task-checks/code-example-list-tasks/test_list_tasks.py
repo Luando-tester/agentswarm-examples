@@ -14,6 +14,8 @@ import pytest
 
 HERE = Path(__file__).resolve().parent
 IMAGES = {
+    "php": "php:8.4-cli-bookworm@sha256:b3e907a1108629c562c4bb313ce3449e34d49991f6bb2487913f6146f47200fe",
+    "dart": "dart:stable-sdk@sha256:854f3c50b1cbd4a5a54c9fa67d4f5b6702ac49b4a26d21a80e7712a72528b215",
     "go": "golang:1.23@sha256:60deed95d3888cc5e4d9ff8a10c54e5edc008c6ae3fba6187be6fb592e19e8c0",
     "typescript": "node:22@sha256:7702d8aa4d5910871692af4480eb3ba86f23047a6417a44d857d06c95d060d3f",
     "rust": "rust:1.89@sha256:57407b378b2b6e07b48a6135a20c87cc22ea6e249c0acf6cb1833ead3cf116e9",
@@ -21,6 +23,8 @@ IMAGES = {
     "ruby": "ruby:3.3-bookworm@sha256:ae098d019fd2995e6cb82e16a87529348ba26a7c83ad6189937decc2846b0730",
 }
 BUILD = {
+    "php": ["php", "-l", "example.php"],
+    "dart": ["dart", "compile", "exe", "example.dart", "-o", "/work/list-tasks"],
     "go": ["go", "build", "-o", "/work/list-tasks", "."],
     # Node 22 executes erasable TypeScript directly; no npm install or build.
     "typescript": ["node", "--version"],
@@ -29,6 +33,8 @@ BUILD = {
     "ruby": ["ruby", "--version"],
 }
 RUN = {
+    "php": ["php", "example.php"],
+    "dart": ["/work/list-tasks"],
     "go": ["/work/list-tasks"],
     "typescript": ["node", "--experimental-strip-types", "example.ts"],
     "rust": ["/work/target/release/list-tasks"],
@@ -140,13 +146,16 @@ def cases():
 
 @pytest.mark.parametrize("language", [os.environ.get("EXAMPLE_LANGUAGE", "go")])
 def test_list_tasks(language):
-    assert language in IMAGES, "EXAMPLE_LANGUAGE must be go, typescript, rust, python, or ruby"
+    assert language in IMAGES, "EXAMPLE_LANGUAGE must be one of " + ", ".join(IMAGES)
     assert os.environ.get("BOUNTY_REPO"), "Export BOUNTY_REPO to the candidate checkout"
     source = Path(os.environ["BOUNTY_REPO"]).resolve() / language
     assert source.is_dir(), f"Missing example directory: {source}"
     assert not source.is_symlink(), "Example directory must not be a symlink"
     assert shutil.which("docker"), "Docker is required"
     image = IMAGES[language]
+    fixture_image = IMAGES['python'] if language in ('php', 'dart') else image
+    if fixture_image != image:
+        docker("image", "inspect", fixture_image)
     docker("image", "inspect", image)  # No implicit network pull during checks.
     fixtures = cases()
     token = secrets.token_hex(8)
@@ -172,7 +181,7 @@ def test_list_tasks(language):
                        "--mount", f"type=volume,src={volume},dst=/build-volume,readonly,volume-nocopy",
                        "--mount", f"type=bind,src={fixture_path},dst=/fixtures.json,readonly",
                        "--mount", f"type=bind,src={HERE / 'fixture_server.py'},dst=/fixture_server.py,readonly",
-                       "--user", f"{os.getuid()}:{os.getgid()}", image,
+                       "--user", f"{os.getuid()}:{os.getgid()}", fixture_image,
                        "python3", "-u", "/fixture_server.py"]):
             for _ in range(100):
                 logs = docker("logs", fixture_name)
