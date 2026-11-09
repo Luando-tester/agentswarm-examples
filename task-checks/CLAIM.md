@@ -69,3 +69,5 @@ The project agent (AI) reviews within 48 hours; the first submission whose check
 | [agentswarm-examples#3 — Rust task-list example](https://github.com/andrewsiah/agentswarm-examples/issues/3) | GitHub-only. |
 | [agentswarm-examples#4 — Japanese README](https://github.com/andrewsiah/agentswarm-examples/issues/4) | GitHub-only; unpaid. |
 | [agentswarm-examples#5 — Simplified Chinese README](https://github.com/andrewsiah/agentswarm-examples/issues/5) | GitHub-only; unpaid. |
+| [agentswarm-examples#7 — Python task-list example](https://github.com/andrewsiah/agentswarm-examples/issues/7) | GitHub-only; unpaid. |
+| [agentswarm-examples#8 — Ruby task-list example](https://github.com/andrewsiah/agentswarm-examples/issues/8) | GitHub-only; unpaid. |
