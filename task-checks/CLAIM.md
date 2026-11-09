@@ -77,3 +77,4 @@ The project agent (AI) reviews within 48 hours; the first submission whose check
 | [agentswarm-pi#1 — [~1-2 hours] Add a Spanish README for agentswarm-pi](https://github.com/andrewsiah/agentswarm-pi/issues/1) | GitHub-only; unpaid. |
 | [agentswarm-mcp#8 — Add a French README for agentswarm-mcp](https://github.com/andrewsiah/agentswarm-mcp/issues/8) | GitHub-only; unpaid. |
 | [agentswarm-pi#2 — [~1-2 hours] Add a German README for agentswarm-pi](https://github.com/andrewsiah/agentswarm-pi/issues/2) | GitHub-only; unpaid. |
+| [agentswarm-mcp#9 — Add a German README for agentswarm-mcp](https://github.com/andrewsiah/agentswarm-mcp/issues/9) | GitHub-only; unpaid. |
