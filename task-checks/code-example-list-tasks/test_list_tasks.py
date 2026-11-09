@@ -14,6 +14,11 @@ import pytest
 
 HERE = Path(__file__).resolve().parent
 IMAGES = {
+    "csharp": "mcr.microsoft.com/dotnet/sdk:10.0@sha256:212fe4cb74627d5adf9817a4088906ae3edff1bd853bb27565d4b46731efe61e",
+    "deno": "denoland/deno:2.5.6@sha256:3ea71953ff50e3ff15c377ead1a8521f624e2f43d27713675a8bed7b33f166aa",
+    "perl": "perl:5.42@sha256:938a94f9bdcadb42809d6780a81481fd4b1cf7058ba4433fdbdc9cd01c23658e",
+    "elixir": "elixir:1.19-otp-28@sha256:7e27df3e4a684163e4a18e618eede53badb70e97e0c92a1845ab22e2e1d96da2",
+    "swift": "swift:6.2-bookworm@sha256:87947bfd51a61c86f487986ccf6390fc9cd4035cf98d74f7b8c9a7cb92d9282a",
     "php": "php:8.4-cli-bookworm@sha256:b3e907a1108629c562c4bb313ce3449e34d49991f6bb2487913f6146f47200fe",
     "dart": "dart:stable-sdk@sha256:854f3c50b1cbd4a5a54c9fa67d4f5b6702ac49b4a26d21a80e7712a72528b215",
     "go": "golang:1.23@sha256:60deed95d3888cc5e4d9ff8a10c54e5edc008c6ae3fba6187be6fb592e19e8c0",
@@ -23,6 +28,11 @@ IMAGES = {
     "ruby": "ruby:3.3-bookworm@sha256:ae098d019fd2995e6cb82e16a87529348ba26a7c83ad6189937decc2846b0730",
 }
 BUILD = {
+    "csharp": ["dotnet", "build", "example.csproj", "--configfile", "NuGet.Config", "-o", "/work/out", "--nologo", "--verbosity", "quiet"],
+    "deno": ["deno", "--version"],
+    "perl": ["perl", "-c", "example.pl"],
+    "elixir": ["elixir", "--version"],
+    "swift": ["swiftc", "-swift-version", "5", "example.swift", "-o", "/work/list-tasks"],
     "php": ["php", "-l", "example.php"],
     "dart": ["dart", "compile", "exe", "example.dart", "-o", "/work/list-tasks"],
     "go": ["go", "build", "-o", "/work/list-tasks", "."],
@@ -33,6 +43,11 @@ BUILD = {
     "ruby": ["ruby", "--version"],
 }
 RUN = {
+    "csharp": ["dotnet", "/work/out/example.dll"],
+    "deno": ["deno", "run", "--cached-only", "--no-config", "--no-lock", "--allow-env", "--allow-net", "example.ts"],
+    "perl": ["perl", "example.pl"],
+    "elixir": ["elixir", "--erl", "+S 2:2", "example.exs"],
+    "swift": ["/work/list-tasks"],
     "php": ["php", "example.php"],
     "dart": ["/work/list-tasks"],
     "go": ["/work/list-tasks"],
@@ -153,7 +168,7 @@ def test_list_tasks(language):
     assert not source.is_symlink(), "Example directory must not be a symlink"
     assert shutil.which("docker"), "Docker is required"
     image = IMAGES[language]
-    fixture_image = IMAGES['python'] if language in ('php', 'dart') else image
+    fixture_image = IMAGES['python'] if language in ('php', 'dart', 'swift', 'elixir', 'perl', 'deno', 'csharp') else image
     if fixture_image != image:
         docker("image", "inspect", fixture_image)
     docker("image", "inspect", image)  # No implicit network pull during checks.
@@ -195,6 +210,7 @@ def test_list_tasks(language):
                            "--mount", work_mount, "--tmpfs", "/tmp:rw,exec,mode=1777,size=768m",
                            "--mount", f"type=bind,src={snapshot},dst=/source,readonly",
                            "--env", "HOME=/tmp", "--env", "GOCACHE=/tmp/go-cache",
+                           *(["--env", "DOTNET_CLI_HOME=/tmp", "--env", "DOTNET_NOLOGO=1", "--env", "DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1", "--env", "DOTNET_CLI_TELEMETRY_OPTOUT=1"] if language == "csharp" else []),
                            "--env", "GOPROXY=off", "--env", "GOTOOLCHAIN=local",
                            "--env", "GOMAXPROCS=2", "--env", "CARGO_HOME=/usr/local/cargo",
                            "--workdir", "/work", image, "sleep", "infinity"]):
@@ -214,6 +230,7 @@ def test_list_tasks(language):
                                      "--mount", work_mount + ",readonly",
                                      "--tmpfs", "/tmp:rw,exec,mode=1777,size=128m",
                                      "--env", "HOME=/tmp", "--env", f"AGENTSWARM_BASE_URL={configured_base}",
+                                     *(["--env", "DOTNET_CLI_HOME=/tmp", "--env", "DOTNET_NOLOGO=1", "--env", "DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1", "--env", "DOTNET_CLI_TELEMETRY_OPTOUT=1"] if language == "csharp" else []),
                                      "--workdir", "/work", image, *RUN[language]], stop_container=runner_name)
                 label = f"{language}/{case['scenario']}"
                 if case["status"] != 200 or case["scenario"].startswith("bad-json"):
