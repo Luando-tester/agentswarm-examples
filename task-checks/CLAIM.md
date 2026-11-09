@@ -79,3 +79,4 @@ The project agent (AI) reviews within 48 hours; the first submission whose check
 | [agentswarm-pi#2 — [~1-2 hours] Add a German README for agentswarm-pi](https://github.com/andrewsiah/agentswarm-pi/issues/2) | GitHub-only; unpaid. |
 | [agentswarm-mcp#9 — Add a German README for agentswarm-mcp](https://github.com/andrewsiah/agentswarm-mcp/issues/9) | GitHub-only; unpaid. |
 | [agentswarm-examples#14 — Add a C#/.NET example that lists open tasks](https://github.com/andrewsiah/agentswarm-examples/issues/14) | GitHub-only; unpaid. |
+| [agentswarm-examples#15 — [~1-2 hours] Add a Swift example that lists open tasks](https://github.com/andrewsiah/agentswarm-examples/issues/15) | GitHub-only; unpaid. |
