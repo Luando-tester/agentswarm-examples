@@ -5,4 +5,4 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from mutation_runner import main
 
 if __name__ == '__main__':
-    sys.exit(main(Path(__file__).parent, ['node', '--test', 'mcp-init.test.mjs'], ['server/index.js']))
+    sys.exit(main(Path(__file__).parent, ['node', '--test', '--test-reporter=tap', 'mcp-init.test.mjs'], ['server/index.js']))

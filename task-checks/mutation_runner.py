@@ -27,20 +27,24 @@ def main(suite, command, required_files):
             output = result.stdout + result.stderr
             print(output, end='', flush=True)
             # A checker that fails before collecting tests cannot reject a mutant.
-            collected = bool(re.search(r'# tests \d+|\d+ (?:passed|failed)', output))
+            collected = bool(re.search(r'(?:#|ℹ) tests \d+|\d+ (?:passed|failed)', output))
             blind = not collected or bool(re.search(r'ERROR collecting|SyntaxError|ModuleNotFoundError', output))
             return result.returncode, output, blind
         except (OSError, subprocess.TimeoutExpired) as error:
             print('BLIND: ' + type(error).__name__, flush=True)
             return None, '', True
 
-    code, _, blind = check(source)
+    code, reference_output, blind = check(source)
     if code != 0 or blind:
         print('BLIND: reference fails; no mutation score is valid', flush=True)
         return 1
+    recipes = [(recipe_file, json.loads(recipe_file.read_text())) for recipe_file in mutants]
+    for recipe_file, recipe in recipes:
+        if re.search(recipe['witness'], reference_output):
+            print(f'BLIND: witness {recipe_file.stem} matches the clean reference', flush=True)
+            return 1
     rejected = 0
-    for recipe_file in mutants:
-        recipe = json.loads(recipe_file.read_text())
+    for recipe_file, recipe in recipes:
         print('\nMUTANT ' + recipe_file.stem + ': ' + recipe['defect'], flush=True)
         with tempfile.TemporaryDirectory(prefix='task-mutant-') as temp:
             repo = Path(temp) / 'repo'
