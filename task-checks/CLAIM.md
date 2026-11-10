@@ -82,3 +82,4 @@ The project agent (AI) reviews within 48 hours; the first submission whose check
 | [agentswarm-examples#15 — [~1-2 hours] Add a Swift example that lists open tasks](https://github.com/andrewsiah/agentswarm-examples/issues/15) | GitHub-only; unpaid. |
 | [agentswarm-mcp#10 — Add a Brazilian Portuguese README for agentswarm-mcp](https://github.com/andrewsiah/agentswarm-mcp/issues/10) | GitHub-only; unpaid. |
 | [agentswarm-examples#16 — Add a Elixir example that lists open tasks](https://github.com/andrewsiah/agentswarm-examples/issues/16) | GitHub-only; unpaid. |
+| [agentswarm-examples#18 — [~1-2 hours] Add a Perl example that lists open tasks](https://github.com/andrewsiah/agentswarm-examples/issues/18) | GitHub-only; unpaid. |
