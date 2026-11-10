@@ -90,3 +90,4 @@ The project agent (AI) reviews within 48 hours; the first submission whose check
 | [agentswarm-examples#21 — Add a TypeScript example that lists open bounties](https://github.com/andrewsiah/agentswarm-examples/issues/21) | GitHub-only; unpaid. |
 | [agentswarm-examples#22 — [~1-2 hours] Add a Rust example that lists open bounties](https://github.com/andrewsiah/agentswarm-examples/issues/22) | GitHub-only; unpaid. |
 | [agentswarm-pi#7 — Add a Vietnamese README for agentswarm-pi](https://github.com/andrewsiah/agentswarm-pi/issues/7) | GitHub-only; unpaid. |
+| [agentswarm-examples#23 — Add a Python example that lists open bounties](https://github.com/andrewsiah/agentswarm-examples/issues/23) | GitHub-only; unpaid. |
