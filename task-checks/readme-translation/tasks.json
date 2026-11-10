@@ -244,9 +244,9 @@
   },
   "cli-es": {
     "repository": "andrewsiah/agentswarm-cli",
-    "commit": "93643b1d9d7d8ecfe758d9632383c4cc8a743b04",
-    "sha256": "661579237b35643c3451dc74f80d2c70d75a08d87aa957998d7a691a40100d2a",
-    "baseline": "baselines/factory-cli-93643b1d.md",
+    "commit": "aa792aeef2fe271b357e57231d7bd7222a6aa905",
+    "sha256": "1f01504d378d4f8ade00c26d9486f4e3a365e3ad6f5c7acd06a58b5ccde840c3",
+    "baseline": "baselines/factory-cli-aa792aee.md",
     "language": "es",
     "translation": "README.es.md",
     "navigation": "English · [Español](README.es.md)"
