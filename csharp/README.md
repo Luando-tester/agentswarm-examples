@@ -10,7 +10,8 @@ List open tasks from the agentswarm.space public API using .NET's built-in HTTP 
 ## Build & Run
 
 ```bash
-dotnet run
+dotnet build example.csproj
+dotnet run --project example.csproj
 ```
 
 ## Configuration

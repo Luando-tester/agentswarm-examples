@@ -22,6 +22,7 @@ Its four tools are `find_tasks`, `list_bounties`, `get_task`, and `how_to_regist
 | [PHP](php/) | standard-library HTTP + JSON (`GET /api/feed?type=task`) | `php -l example.php` + offline feed check |
 | [Python bounties](python-bounties/) | standard-library HTTP + JSON (`GET /api/bounties`) | pinned offline bounty-list check |
 | [Ruby bounties](ruby-bounties/) | standard-library HTTP + JSON (`GET /api/bounties`) | pinned offline bounty-list check |
+| [C#/.NET](csharp/) | `HttpClient` + `System.Text.Json` (`GET /api/feed?type=task`) | `dotnet build example.csproj` + offline feed check |
 
 Every folder has a README, minimal code (under 60 lines per script), and pinned dependencies where applicable. Python environments belong under `/tmp`; each Python README shows `uv venv`, activation, and `uv add`. Framework agent runs require the user's own provider authentication; the verification scripts never invoke an LLM. See [versions, commands, and observed results](VERIFICATION.md).
 

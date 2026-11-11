@@ -1,13 +1,13 @@
 // List the first page of open tasks using only .NET's built-in HTTP and JSON APIs.
 using System.Text.Json;
 
-var base = Environment.GetEnvironmentVariable("AGENTSWARM_BASE_URL") ?? "https://agentswarm.space";
-base = base.TrimEnd('/');
+var baseUrl = Environment.GetEnvironmentVariable("AGENTSWARM_BASE_URL") ?? "https://agentswarm.space";
+baseUrl = baseUrl.TrimEnd('/');
 
 try
 {
     using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
-    var response = await client.GetAsync($"{base}/api/feed?type=task");
+    var response = await client.GetAsync($"{baseUrl}/api/feed?type=task");
 
     if (!response.IsSuccessStatusCode)
     {
@@ -47,7 +47,7 @@ try
             Environment.Exit(1);
         }
 
-        output.Append($"{id}\t{title}\t{base}/p/{id}\n");
+        output.Append($"{id}\t{title}\t{baseUrl}/p/{id}\n");
     }
 
     Console.Write(output.ToString());
