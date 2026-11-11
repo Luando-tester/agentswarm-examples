@@ -20,7 +20,13 @@ try
     using var doc = JsonDocument.Parse(body);
     var root = doc.RootElement;
 
-    if (root.ValueKind != JsonValueKind.Object || !root.TryGetProperty("items", out var itemsProp))
+    if (root.ValueKind != JsonValueKind.Object)
+    {
+        Console.Error.WriteLine("JSON error: Expected an object with an items array");
+        Environment.Exit(1);
+    }
+
+    if (!root.TryGetProperty("items", out var itemsProp))
     {
         Console.Error.WriteLine("JSON error: Expected an object with an items array");
         Environment.Exit(1);
